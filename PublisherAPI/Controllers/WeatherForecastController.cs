@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PublisherAPI.Model;
+using PublisherAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,12 @@ namespace PublisherAPI.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IMessageService _messageService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMessageService messageService)
         {
             _logger = logger;
+            _messageService = messageService;
         }
 
         [HttpGet]
@@ -39,6 +42,8 @@ namespace PublisherAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]string payload)
         {
+            Console.WriteLine("received a Post: " + payload);
+            _messageService.Enqueue(payload);
             return Ok("test");
         }
     }
